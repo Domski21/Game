@@ -52,6 +52,8 @@ def game():
     player_x = 400
     player_y = 300
     score = 0
+    welcome_message_time = 3  # Powitanie będzie widoczne przez 3 sekundy
+    start_time = time.time()
 
     # Lista obiektów do zebrania (losowo generowane zielone i czerwone)
     objects = []
@@ -85,19 +87,23 @@ def game():
         # Rysowanie obiektów do zebrania
         for obj in objects[:]:
             draw_sphere(obj[0], obj[1], obj[2])
-
-            # Sprawdzenie kolizji
             if check_collision(player_x, player_y, obj[0], obj[1]):
                 if obj[2] == GREEN:
                     score += 1  # Dodaj punkty za zielony obiekt
                 else:
                     score -= 1  # Odejmij punkty za czerwony obiekt
-                objects.remove(obj)  # Usuń obiekt natychmiast po zebraniu
+                objects.remove(obj)  # Usuwamy obiekt po zebraniu
+
+        # Wyświetlanie powitania
+        if current_time - start_time <= welcome_message_time:
+            font = pygame.font.SysFont("Arial", 30)
+            welcome_text = font.render("Witaj w grze!", True, (255, 255, 0))
+            screen.blit(welcome_text, (screen_width // 2 - welcome_text.get_width() // 2, 10))
 
         # Wyświetlanie wyniku
         font = pygame.font.SysFont("Arial", 24)
         text = font.render(f"Wynik: {score}", True, (255, 255, 255))
-        screen.blit(text, (10, 10))
+        screen.blit(text, (10, 50))
 
         # Aktualizacja okna
         pygame.display.flip()
